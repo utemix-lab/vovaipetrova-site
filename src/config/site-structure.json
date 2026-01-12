@@ -1,0 +1,178 @@
+{
+  "site": {
+    "name": "Vova & Petrova",
+    "description": "Творческо-технологический проект",
+    "menu": [
+      {
+        "id": "services",
+        "title": "Услуги",
+        "path": "/services",
+        "submenu": [
+          {
+            "id": "video",
+            "title": "Видеопродакшн",
+            "path": "/services/video"
+          },
+          {
+            "id": "design",
+            "title": "Дизайн",
+            "path": "/services/design"
+          },
+          {
+            "id": "engineering",
+            "title": "Проектирование",
+            "path": "/services/engineering"
+          },
+          {
+            "id": "automation",
+            "title": "Автоматизация",
+            "path": "/services/automation"
+          }
+        ]
+      },
+      {
+        "id": "portfolio",
+        "title": "Портфолио",
+        "path": "/portfolio",
+        "submenu": [
+          {
+            "id": "cases",
+            "title": "Кейсы",
+            "path": "/portfolio/cases"
+          },
+          {
+            "id": "projects",
+            "title": "Проекты",
+            "path": "/portfolio/projects"
+          }
+        ]
+      },
+      {
+        "id": "kb",
+        "title": "База знаний",
+        "path": "/kb",
+        "submenu": [
+          {
+            "id": "articles",
+            "title": "Статьи",
+            "path": "/kb/articles"
+          },
+          {
+            "id": "tools",
+            "title": "Инструменты",
+            "path": "/kb/tools"
+          },
+          {
+            "id": "guides",
+            "title": "Гайды",
+            "path": "/kb/guides"
+          }
+        ]
+      },
+      {
+        "id": "about",
+        "title": "О нас",
+        "path": "/about"
+      },
+      {
+        "id": "stories",
+        "title": "Блог",
+        "path": "/stories"
+      }
+    ],
+    "pages": {
+      "/": {
+        "title": "Главная",
+        "type": "home",
+        "sections": [
+          {
+            "id": "hero",
+            "type": "hero",
+            "title": "Vova & Petrova",
+            "subtitle": "Творческо-технологический проект"
+          },
+          {
+            "id": "services-preview",
+            "type": "services-preview",
+            "title": "Наши услуги"
+          },
+          {
+            "id": "portfolio-preview",
+            "type": "portfolio-preview",
+            "title": "Портфолио"
+          }
+        ]
+      },
+      "/services": {
+        "title": "Услуги",
+        "type": "section",
+        "description": "Что мы делаем"
+      },
+      "/services/video": {
+        "title": "Видеопродакшн",
+        "type": "service",
+        "parent": "/services"
+      },
+      "/services/design": {
+        "title": "Дизайн",
+        "type": "service",
+        "parent": "/services"
+      },
+      "/services/engineering": {
+        "title": "Проектирование",
+        "type": "service",
+        "parent": "/services"
+      },
+      "/services/automation": {
+        "title": "Автоматизация",
+        "type": "service",
+        "parent": "/services"
+      },
+      "/portfolio": {
+        "title": "Портфолио",
+        "type": "section",
+        "description": "Наши работы"
+      },
+      "/portfolio/cases": {
+        "title": "Кейсы",
+        "type": "subsection",
+        "parent": "/portfolio"
+      },
+      "/portfolio/projects": {
+        "title": "Проекты",
+        "type": "subsection",
+        "parent": "/portfolio"
+      },
+      "/kb": {
+        "title": "База знаний",
+        "type": "section",
+        "description": "Статьи, инструменты, гайды"
+      },
+      "/kb/articles": {
+        "title": "Статьи",
+        "type": "subsection",
+        "parent": "/kb"
+      },
+      "/kb/tools": {
+        "title": "Инструменты",
+        "type": "subsection",
+        "parent": "/kb"
+      },
+      "/kb/guides": {
+        "title": "Гайды",
+        "type": "subsection",
+        "parent": "/kb"
+      },
+      "/about": {
+        "title": "О нас",
+        "type": "page",
+        "description": "О проекте Vova & Petrova"
+      },
+      "/stories": {
+        "title": "Блог",
+        "type": "section",
+        "description": "Новости и истории проекта"
+      }
+    }
+  }
+}

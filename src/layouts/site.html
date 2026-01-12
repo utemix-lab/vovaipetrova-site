@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vova & Petrova</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./site.css">
+</head>
+<body>
+  <div class="site-container">
+    <!-- Header -->
+    <header class="site-header">
+      <div class="header-content">
+        <div class="logo">
+          <a href="#/">Vova & Petrova</a>
+        </div>
+        <nav class="main-menu" id="main-menu"></nav>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="site-content">
+      <!-- Sidebar (показывается для разделов с подразделами) -->
+      <aside class="site-sidebar" id="sidebar"></aside>
+
+      <!-- Main Content -->
+      <main class="site-main">
+        <!-- Контент будет рендериться роутером -->
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-content">
+        <p>&copy; 2026 Vova & Petrova</p>
+        <nav class="footer-nav">
+          <a href="#/about">О нас</a>
+          <a href="#/services">Услуги</a>
+          <a href="#/portfolio">Портфолио</a>
+        </nav>
+      </div>
+    </footer>
+  </div>
+
+  <script src="./core/site-router.js"></script>
+  <script src="./core/site-navigation.js"></script>
+  <script>
+    // Загружаем структуру сайта
+    async function initSite() {
+      try {
+        const response = await fetch('./config/site-structure.json');
+        if (!response.ok) {
+          throw new Error('Не удалось загрузить структуру сайта');
+        }
+        
+        const siteStructure = await response.json();
+        
+        // Инициализируем навигацию
+        const navigation = new SiteNavigation(siteStructure);
+        navigation.renderMainMenu('main-menu');
+        
+        // Инициализируем роутер
+        const router = new SiteRouter(siteStructure);
+        
+        // Обновляем навигацию и sidebar при смене маршрута
+        window.addEventListener('hashchange', () => {
+          const currentRoute = window.location.hash.slice(1) || '/';
+          navigation.renderMainMenu('main-menu');
+          navigation.renderSidebar('sidebar', currentRoute);
+        });
+        
+        // Первоначальная отрисовка sidebar
+        const currentRoute = window.location.hash.slice(1) || '/';
+        navigation.renderSidebar('sidebar', currentRoute);
+        
+      } catch (error) {
+        console.error('Ошибка инициализации сайта:', error);
+        document.querySelector('main').innerHTML = `
+          <section class="error-page">
+            <h1>Ошибка загрузки</h1>
+            <p>Не удалось загрузить структуру сайта. Проверьте консоль для деталей.</p>
+          </section>
+        `;
+      }
+    }
+
+    // Запускаем при загрузке страницы
+    document.addEventListener('DOMContentLoaded', initSite);
+  </script>
+</body>
+</html>

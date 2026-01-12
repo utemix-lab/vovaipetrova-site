@@ -69,6 +69,12 @@ function main() {
     writeFileSync(join(DIST_DIR, 'styles.css'), styles);
     log('✅ Стили скопированы');
   }
+  
+  const siteStyles = loadText(join(STYLES_DIR, 'site.css'));
+  if (siteStyles) {
+    writeFileSync(join(DIST_DIR, 'site.css'), siteStyles);
+    log('✅ Стили сайта скопированы');
+  }
 
   // Копируем данные в dist/data для загрузки через fetch
   const distDataDir = join(DIST_DIR, 'data');
@@ -88,7 +94,7 @@ function main() {
   const distCoreDir = join(DIST_DIR, 'core');
   if (existsSync(coreDir)) {
     ensureDir(distCoreDir);
-    const coreFiles = ['router.js', 'navigation.js'];
+    const coreFiles = ['router.js', 'navigation.js', 'site-router.js', 'site-navigation.js'];
     for (const file of coreFiles) {
       const srcPath = join(coreDir, file);
       if (existsSync(srcPath)) {
@@ -98,17 +104,38 @@ function main() {
     log('✅ Core компоненты скопированы');
   }
 
-  // Генерируем главную страницу
-  const indexTemplate = loadTemplate('index');
-  if (indexTemplate) {
-    const indexHTML = indexTemplate
-      .replace('{{ROUTES}}', JSON.stringify(routes, null, 2))
-      .replace('{{TOKENS}}', JSON.stringify(tokens, null, 2));
-    
-    writeFileSync(join(DIST_DIR, 'index.html'), indexHTML);
-    log('✅ Главная страница сгенерирована');
+  // Копируем конфигурацию сайта
+  const configDir = join(__dirname, '../src/config');
+  const distConfigDir = join(DIST_DIR, 'config');
+  if (existsSync(configDir)) {
+    ensureDir(distConfigDir);
+    const configFiles = ['site-structure.json'];
+    for (const file of configFiles) {
+      const srcPath = join(configDir, file);
+      if (existsSync(srcPath)) {
+        copyFileSync(srcPath, join(distConfigDir, file));
+      }
+    }
+    log('✅ Конфигурация сайта скопирована');
+  }
+
+  // Генерируем главную страницу (используем новый шаблон site.html)
+  const siteTemplate = loadTemplate('site');
+  if (siteTemplate) {
+    writeFileSync(join(DIST_DIR, 'index.html'), siteTemplate);
+    log('✅ Главная страница сгенерирована (site.html)');
   } else {
-    // Создаём минимальную главную страницу
+    // Fallback на старый шаблон
+    const indexTemplate = loadTemplate('index');
+    if (indexTemplate) {
+      const indexHTML = indexTemplate
+        .replace('{{ROUTES}}', JSON.stringify(routes, null, 2))
+        .replace('{{TOKENS}}', JSON.stringify(tokens, null, 2));
+      
+      writeFileSync(join(DIST_DIR, 'index.html'), indexHTML);
+      log('✅ Главная страница сгенерирована (index.html fallback)');
+    } else {
+      // Создаём минимальную главную страницу
     const minimalIndex = `<!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -137,8 +164,9 @@ function main() {
 </body>
 </html>`;
     
-    writeFileSync(join(DIST_DIR, 'index.html'), minimalIndex);
-    log('✅ Минимальная главная страница создана');
+      writeFileSync(join(DIST_DIR, 'index.html'), minimalIndex);
+      log('✅ Минимальная главная страница создана');
+    }
   }
 
   log('\n✅ Сборка завершена');
