@@ -204,6 +204,83 @@ section h2 {
   border-radius: var(--radius);
 }
 
+/* Breadcrumbs */
+.breadcrumbs {
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.breadcrumb-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.breadcrumb-link:hover {
+  color: var(--text-primary);
+}
+
+.breadcrumb-separator {
+  color: var(--text-muted);
+  margin: 0 var(--spacing-sm);
+}
+
+.breadcrumb-current {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Navigation cards */
+.nav-card {
+  background: var(--bg-card);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: transform 0.2s;
+}
+
+.nav-card:hover {
+  transform: translateY(-2px);
+}
+
+.nav-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.nav-card p {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.nav-card-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.nav-card-link:hover {
+  text-decoration: underline;
+}
+
+/* Active nav link */
+.nav-link.active {
+  color: var(--text-primary);
+  font-weight: 500;
+  background-color: var(--bg-card);
+}
+
+/* Quick nav grid */
+.nav-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .header {
@@ -218,7 +295,8 @@ section h2 {
 
   .routes-grid,
   .kb-list,
-  .stories-list {
+  .stories-list,
+  .nav-grid {
     grid-template-columns: 1fr;
   }
 }

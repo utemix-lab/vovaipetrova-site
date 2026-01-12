@@ -14,29 +14,8 @@
     </header>
     
     <main class="main">
-      <section class="hero">
-        <h2>База знаний и истории проекта</h2>
-        <p>Статический сайт с контентом из Think Tank</p>
-      </section>
-
-      <section class="routes-section">
-        <h2>Маршруты</h2>
-        <div class="routes-grid" id="routes-grid"></div>
-      </section>
-
-      <section class="kb-section">
-        <h2>База знаний</h2>
-        <div class="kb-list" id="kb-list">
-          <p class="loading">Загрузка...</p>
-        </div>
-      </section>
-
-      <section class="stories-section">
-        <h2>Stories</h2>
-        <div class="stories-list" id="stories-list">
-          <p class="loading">Загрузка...</p>
-        </div>
-      </section>
+      <div id="breadcrumbs"></div>
+      <!-- Контент страницы будет рендериться роутером -->
     </main>
 
     <footer class="footer">
@@ -44,6 +23,8 @@
     </footer>
   </div>
 
+  <script src="./core/router.js"></script>
+  <script src="./core/navigation.js"></script>
   <script>
     // Данные из build
     const routes = {{ROUTES}};
@@ -69,42 +50,38 @@
       }
     }
 
-    // Рендеринг навигации
-    function renderNav() {
-      const nav = document.getElementById('main-nav');
-      if (!routes || !routes.routes) return;
+    // Инициализация роутера и навигации
+    let router, navigation;
 
-      const navItems = routes.routes
-        .filter(r => r.in_sitemap !== false)
-        .slice(0, 5)
-        .map(r => `<a href="#${r.path.replace('/', '')}" class="nav-link">${r.title}</a>`)
-        .join('');
+    function initApp() {
+      if (!routes || !routes.routes) {
+        console.error('Routes data not found');
+        return;
+      }
 
-      nav.innerHTML = navItems;
+      // Создаём компоненты
+      router = new Router(routes);
+      navigation = new Navigation(routes);
+
+      // Рендерим навигацию
+      navigation.renderMainNav('main-nav');
+      
+      // Обновляем навигацию при смене маршрута
+      window.addEventListener('hashchange', () => {
+        navigation.renderMainNav('main-nav');
+        const currentRoute = window.location.hash.slice(1) || '/';
+        navigation.renderBreadcrumbs('breadcrumbs', currentRoute);
+      });
+
+      // Рендерим breadcrumbs для текущего маршрута
+      const currentRoute = window.location.hash.slice(1) || '/';
+      navigation.renderBreadcrumbs('breadcrumbs', currentRoute);
     }
 
-    // Рендеринг маршрутов
-    function renderRoutes() {
-      const grid = document.getElementById('routes-grid');
-      if (!routes || !routes.routes) return;
-
-      const cards = routes.routes
-        .filter(r => r.in_sitemap !== false)
-        .map(r => `
-          <div class="route-card">
-            <h3>${r.title}</h3>
-            <p class="route-path">${r.path}</p>
-            ${r.og && r.og.description ? `<p class="route-desc">${r.og.description}</p>` : ''}
-          </div>
-        `)
-        .join('');
-
-      grid.innerHTML = cards;
-    }
-
-    // Загрузка KB glossary
+    // Загрузка KB glossary (вызывается только на странице /kb)
     async function loadKB() {
       const kbList = document.getElementById('kb-list');
+      if (!kbList) return; // Элемент может отсутствовать на некоторых страницах
       try {
         const response = await fetch('./data/kb_glossary_lite.jsonl');
         if (!response.ok) {
@@ -127,9 +104,10 @@
       }
     }
 
-    // Загрузка Stories
+    // Загрузка Stories (вызывается только на странице /stories)
     async function loadStories() {
       const storiesList = document.getElementById('stories-list');
+      if (!storiesList) return; // Элемент может отсутствовать на некоторых страницах
       try {
         const response = await fetch('./data/stories_digests.jsonl');
         if (!response.ok) {
@@ -154,8 +132,8 @@
 
     // Инициализация
     document.addEventListener('DOMContentLoaded', () => {
-      renderNav();
-      renderRoutes();
+      initApp();
+      // Загружаем данные для страниц, которые их используют
       loadKB();
       loadStories();
     });

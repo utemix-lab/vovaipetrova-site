@@ -83,6 +83,21 @@ function main() {
   }
   log('✅ Данные скопированы в dist/data');
 
+  // Копируем core компоненты
+  const coreDir = join(__dirname, '../src/core');
+  const distCoreDir = join(DIST_DIR, 'core');
+  if (existsSync(coreDir)) {
+    ensureDir(distCoreDir);
+    const coreFiles = ['router.js', 'navigation.js'];
+    for (const file of coreFiles) {
+      const srcPath = join(coreDir, file);
+      if (existsSync(srcPath)) {
+        copyFileSync(srcPath, join(distCoreDir, file));
+      }
+    }
+    log('✅ Core компоненты скопированы');
+  }
+
   // Генерируем главную страницу
   const indexTemplate = loadTemplate('index');
   if (indexTemplate) {
