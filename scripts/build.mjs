@@ -94,7 +94,7 @@ function main() {
   const distCoreDir = join(DIST_DIR, 'core');
   if (existsSync(coreDir)) {
     ensureDir(distCoreDir);
-    const coreFiles = ['router.js', 'navigation.js', 'site-router.js', 'site-navigation.js'];
+    const coreFiles = ['router.js', 'navigation.js', 'site-router.js', 'site-navigation.js', 'content-loader.js'];
     for (const file of coreFiles) {
       const srcPath = join(coreDir, file);
       if (existsSync(srcPath)) {
