@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vova & Petrova</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1 class="logo">Vova & Petrova</h1>
+      <nav class="nav" id="main-nav"></nav>
+    </header>
+    
+    <main class="main">
+      <section class="hero">
+        <h2>База знаний и истории проекта</h2>
+        <p>Статический сайт с контентом из Think Tank</p>
+      </section>
+
+      <section class="routes-section">
+        <h2>Маршруты</h2>
+        <div class="routes-grid" id="routes-grid"></div>
+      </section>
+
+      <section class="kb-section">
+        <h2>База знаний</h2>
+        <div class="kb-list" id="kb-list">
+          <p class="loading">Загрузка...</p>
+        </div>
+      </section>
+
+      <section class="stories-section">
+        <h2>Stories</h2>
+        <div class="stories-list" id="stories-list">
+          <p class="loading">Загрузка...</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Генерируется из vovaipetrova-core</p>
+    </footer>
+  </div>
+
+  <script>
+    // Данные из build
+    const routes = {{ROUTES}};
+    const tokens = {{TOKENS}};
+
+    // Применяем токены как CSS переменные
+    if (tokens && tokens.colors) {
+      const root = document.documentElement;
+      const colors = tokens.colors;
+      
+      if (colors.background) {
+        root.style.setProperty('--bg-primary', colors.background.primary || '#f6f7fb');
+        root.style.setProperty('--bg-card', colors.background.card || '#ffffff');
+      }
+      if (colors.text) {
+        root.style.setProperty('--text-primary', colors.text.primary || '#1f2933');
+        root.style.setProperty('--text-muted', colors.text.muted || '#64748b');
+      }
+      if (colors.status) {
+        root.style.setProperty('--status-ready', colors.status.ready || '#0f9960');
+        root.style.setProperty('--status-review', colors.status.review || '#d9822b');
+        root.style.setProperty('--status-draft', colors.status.draft || '#7b8794');
+      }
+    }
+
+    // Рендеринг навигации
+    function renderNav() {
+      const nav = document.getElementById('main-nav');
+      if (!routes || !routes.routes) return;
+
+      const navItems = routes.routes
+        .filter(r => r.in_sitemap !== false)
+        .slice(0, 5)
+        .map(r => `<a href="#${r.path.replace('/', '')}" class="nav-link">${r.title}</a>`)
+        .join('');
+
+      nav.innerHTML = navItems;
+    }
+
+    // Рендеринг маршрутов
+    function renderRoutes() {
+      const grid = document.getElementById('routes-grid');
+      if (!routes || !routes.routes) return;
+
+      const cards = routes.routes
+        .filter(r => r.in_sitemap !== false)
+        .map(r => `
+          <div class="route-card">
+            <h3>${r.title}</h3>
+            <p class="route-path">${r.path}</p>
+            ${r.og && r.og.description ? `<p class="route-desc">${r.og.description}</p>` : ''}
+          </div>
+        `)
+        .join('');
+
+      grid.innerHTML = cards;
+    }
+
+    // Загрузка KB glossary
+    async function loadKB() {
+      const kbList = document.getElementById('kb-list');
+      try {
+        const response = await fetch('./data/kb_glossary_lite.jsonl');
+        if (!response.ok) {
+          kbList.innerHTML = '<p class="error">KB glossary не найден</p>';
+          return;
+        }
+        const text = await response.text();
+        const lines = text.trim().split('\n').filter(Boolean);
+        const items = lines.slice(0, 10).map(line => {
+          const item = JSON.parse(line);
+          return `<div class="kb-item">
+            <h4>${item.title}</h4>
+            <p>${item.lite_summary || ''}</p>
+          </div>`;
+        }).join('');
+
+        kbList.innerHTML = items || '<p>Термины не найдены</p>';
+      } catch (error) {
+        kbList.innerHTML = '<p class="error">Ошибка загрузки KB</p>';
+      }
+    }
+
+    // Загрузка Stories
+    async function loadStories() {
+      const storiesList = document.getElementById('stories-list');
+      try {
+        const response = await fetch('./data/stories_digests.jsonl');
+        if (!response.ok) {
+          storiesList.innerHTML = '<p class="error">Stories digests не найдены</p>';
+          return;
+        }
+        const text = await response.text();
+        const lines = text.trim().split('\n').filter(Boolean);
+        const items = lines.slice(0, 5).map(line => {
+          const item = JSON.parse(line);
+          return `<div class="story-item">
+            <h4>${item.title}</h4>
+            <p>Эпизодов: ${item.episodes ? item.episodes.length : 0}</p>
+          </div>`;
+        }).join('');
+
+        storiesList.innerHTML = items || '<p>Stories не найдены</p>';
+      } catch (error) {
+        storiesList.innerHTML = '<p class="error">Ошибка загрузки Stories</p>';
+      }
+    }
+
+    // Инициализация
+    document.addEventListener('DOMContentLoaded', () => {
+      renderNav();
+      renderRoutes();
+      loadKB();
+      loadStories();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+/* Основные переменные (будут переопределены через JS из tokens.json) */
+:root {
+  --bg-primary: #f6f7fb;
+  --bg-card: #ffffff;
+  --text-primary: #1f2933;
+  --text-muted: #64748b;
+  --status-ready: #0f9960;
+  --status-review: #d9822b;
+  --status-draft: #7b8794;
+  --border: #e3e8f4;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --radius: 8px;
+  --shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Inter, Segoe UI, system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-lg) 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--spacing-xl);
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.nav {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.nav-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  transition: background-color 0.2s;
+}
+
+.nav-link:hover {
+  background-color: var(--bg-card);
+}
+
+/* Main */
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.hero {
+  text-align: center;
+  padding: var(--spacing-xl) 0;
+}
+
+.hero h2 {
+  font-size: 2rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.hero p {
+  color: var(--text-muted);
+  font-size: 1.125rem;
+}
+
+/* Sections */
+section h2 {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 2px solid var(--border);
+}
+
+/* Routes Grid */
+.routes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.route-card {
+  background: var(--bg-card);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: transform 0.2s;
+}
+
+.route-card:hover {
+  transform: translateY(-2px);
+}
+
+.route-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.route-path {
+  font-family: monospace;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.route-desc {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* KB List */
+.kb-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.kb-item {
+  background: var(--bg-card);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.kb-item h4 {
+  font-size: 1.125rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.kb-item p {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* Stories List */
+.stories-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.story-item {
+  background: var(--bg-card);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.story-item h4 {
+  font-size: 1.125rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.story-item p {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* Footer */
+.footer {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* Utilities */
+.loading {
+  color: var(--text-muted);
+  text-align: center;
+  padding: var(--spacing-xl);
+}
+
+.error {
+  color: #dc2626;
+  padding: var(--spacing-md);
+  background: #fee2e2;
+  border-radius: var(--radius);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+
+  .nav {
+    flex-wrap: wrap;
+  }
+
+  .routes-grid,
+  .kb-list,
+  .stories-list {
+    grid-template-columns: 1fr;
+  }
+}
