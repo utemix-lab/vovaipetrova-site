@@ -30,9 +30,22 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Checkout core repository
+        uses: actions/checkout@v4
+        with:
+          repository: utemix-lab/vovaipetrova-core
+          path: ../vovaipetrova-core
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate content slices in core
+        working-directory: ../vovaipetrova-core
+        run: |
+          npm ci
+          npm run content:slices
+          npm run static:routes:generate
+
       - name: Import data from core
         run: npm run import
-        continue-on-error: true
 
       - name: Build site
         run: npm run build
