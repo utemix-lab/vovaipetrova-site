@@ -34,17 +34,19 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: utemix-lab/vovaipetrova-core
-          path: ../vovaipetrova-core
+          path: core-repo
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate content slices in core
-        working-directory: ../vovaipetrova-core
+        working-directory: core-repo
         run: |
           npm ci
           npm run content:slices
           npm run static:routes:generate
 
       - name: Import data from core
+        env:
+          CORE_DIR: ${{ github.workspace }}/core-repo
         run: npm run import
 
       - name: Build site
