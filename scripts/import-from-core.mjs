@@ -12,7 +12,25 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const CORE_DIR = join(__dirname, '../../vovaipetrova-core');
+// Проверяем разные возможные пути к core
+const possibleCorePaths = [
+  join(__dirname, '../../vovaipetrova-core'),  // Локальная разработка
+  join(process.cwd(), '../vovaipetrova-core'), // CI (рядом с site)
+];
+
+let CORE_DIR = null;
+for (const path of possibleCorePaths) {
+  if (existsSync(path)) {
+    CORE_DIR = path;
+    break;
+  }
+}
+
+if (!CORE_DIR) {
+  // Пробуем найти через переменную окружения
+  CORE_DIR = process.env.CORE_DIR || possibleCorePaths[0];
+}
+
 const DATA_DIR = join(__dirname, '../data');
 
 const FILES_TO_COPY = [
@@ -36,11 +54,16 @@ function ensureDir(dir) {
 function main() {
   log('Импорт данных из vovaipetrova-core...\n');
 
-  if (!existsSync(CORE_DIR)) {
-    log(`❌ Репозиторий core не найден: ${CORE_DIR}`);
+  if (!CORE_DIR || !existsSync(CORE_DIR)) {
+    log(`❌ Репозиторий core не найден`);
+    log(`   Проверенные пути:`);
+    possibleCorePaths.forEach(p => log(`   - ${p}`));
     log(`   Убедитесь, что vovaipetrova-core находится рядом с vovaipetrova-site`);
+    log(`   Или установите переменную окружения CORE_DIR`);
     process.exit(1);
   }
+
+  log(`📁 Используется core из: ${CORE_DIR}`);
 
   ensureDir(DATA_DIR);
 
