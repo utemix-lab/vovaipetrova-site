@@ -1,6 +1,11 @@
 # vovaipetrova-site
 
-Статический сайт для публикации контента из базы знаний Vova & Petrova.
+**vovaipetrova-site** — среда со вкладками для разных проектов и классических стеков.
+
+Здесь ведётся разработка элементов классического web-интерфейса:
+окна, разделы, чек-боксы, списки, формы, навигация.
+
+---
 
 ## Роль в экосистеме
 
@@ -9,11 +14,48 @@
 
 → [Слои согласованности](https://github.com/utemix-lab/extended-mind/blob/main/docs/architecture/COHERENCE_LAYERS.md)
 
-## Описание
+vovaipetrova-site — это лаборатория классического UI для экосистемы utemix-lab.
 
-Этот репозиторий содержит статический сайт, который получает данные из [vovaipetrova-core](../vovaipetrova-core) и публикует их на GitHub Pages.
+| Проект | Роль |
+|--------|------|
+| **vovaipetrova-core** | Контент (read-only источник) |
+| **vovaipetrova-site** | Классический web-интерфейс |
+| **dream-graph** | 3D-визуализация графов |
+| **extended-mind-console** | Редакторы таксономий |
 
-## Структура
+### Что делает vovaipetrova-site
+
+- **Разрабатывает** элементы классического UI (окна, разделы, чек-боксы, списки)
+- **Экспортирует** компоненты для dream-graph и других проектов
+- **Публикует** контент из vovaipetrova-core на GitHub Pages
+- **Экспериментирует** с классическими стеками (HTML/CSS/JS)
+
+### Связь с экосистемой
+
+```
+vovaipetrova-core (канон)
+        ↓ данные
+vovaipetrova-site (классический UI)
+        ↓ компоненты
+dream-graph (визуализация)
+```
+
+---
+
+## Структура вкладок
+
+vovaipetrova-site организован как среда с вкладками:
+
+| Вкладка/Раздел | Описание |
+|----------------|----------|
+| **Layouts** | HTML шаблоны страниц |
+| **Styles** | CSS стили и дизайн-токены |
+| **Components** | UI компоненты (разделы, списки, чек-боксы) |
+| **Core** | Логика навигации и роутинга |
+
+---
+
+## Структура проекта
 
 ```
 vovaipetrova-site/
@@ -22,11 +64,16 @@ vovaipetrova-site/
 ├── src/
 │   ├── layouts/       # HTML шаблоны
 │   ├── styles/        # CSS стили
-│   └── components/    # UI компоненты
+│   ├── core/          # Навигация, роутинг
+│   └── config/        # Конфигурация структуры
+├── docs/              # Документация разработки интерфейса
+├── ecosystem/         # Экосистемный слой
 └── scripts/
     ├── import-from-core.mjs  # Импорт данных
     └── build.mjs             # Сборка сайта
 ```
+
+---
 
 ## Быстрый старт
 
@@ -42,12 +89,12 @@ npm install
 npm run import
 ```
 
-Этот скрипт копирует необходимые файлы из `vovaipetrova-core`:
-- `kb_glossary_lite.jsonl` - термины базы знаний
-- `stories_digests.jsonl` - дайджесты Stories
-- `routes.json` - маршруты сайта
-- `tokens.json` - дизайн-токены
-- `components.md` - описание компонентов
+Копирует из `vovaipetrova-core`:
+- `kb_glossary_lite.jsonl` — термины базы знаний
+- `stories_digests.jsonl` — дайджесты Stories
+- `routes.json` — маршруты сайта
+- `tokens.json` — дизайн-токены
+- `components.md` — описание компонентов
 
 ### 3. Сборка сайта
 
@@ -55,37 +102,41 @@ npm run import
 npm run build
 ```
 
-Собранный сайт будет в папке `dist/`.
-
 ### 4. Локальный просмотр
-
-Откройте `dist/index.html` в браузере или используйте простой HTTP-сервер:
 
 ```bash
 cd dist && python -m http.server 8000
 ```
 
-Затем откройте http://localhost:8000
+Открой http://localhost:8000
+
+---
+
+## Экспорт компонентов
+
+vovaipetrova-site экспортирует UI-компоненты для других проектов экосистемы:
+
+| Компонент | Описание | Потребитель |
+|-----------|----------|-------------|
+| Навигация | Меню, хлебные крошки | dream-graph |
+| Списки | Термины, дайджесты | extended-mind-console |
+| Формы | Чек-боксы, инпуты | minds-lorgnette |
+| Токены | Цвета, шрифты | все проекты |
+
+---
 
 ## Деплой
 
-Сайт автоматически деплоится на GitHub Pages при пуше в `main` ветку через GitHub Actions workflow.
+Сайт деплоится на GitHub Pages при пуше в `main` через GitHub Actions.
 
-## Разработка
+---
 
-### Скрипты
+## Связанные проекты
 
-- `npm run import` - импорт данных из core
-- `npm run build` - сборка статического сайта
-- `npm run deploy` - импорт + сборка (для CI)
-
-### Данные
-
-Данные импортируются из `vovaipetrova-core`:
-- Content slices (JSONL файлы)
-- Static контракт (routes, tokens, components)
-- Только контент со статусом `ready`
-
-## Связанные репозитории
-
-- [vovaipetrova-core](../vovaipetrova-core) - источник данных (Think Tank)
+| Проект | Назначение |
+|--------|------------|
+| **vovaipetrova-core** | Контент-проект (источник данных) |
+| **dream-graph** | 3D визуализация графов |
+| **extended-mind** | Мета-координатор экосистемы |
+| **minds-lorgnette** | Интеграция способов организации знаний |
+| **evoquant** | Исследовательские проекты |
